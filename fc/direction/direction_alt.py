@@ -1,4 +1,5 @@
 import time
+from ..sensors.imu import get_pitch_deg, get_roll_deg , get_yaw_deg
 
 # --- PID State Variables ---
 roll_i = pitch_i = yaw_i = thrust_i = 0.0
@@ -52,9 +53,9 @@ while True:
     last = now
 
     # 1) ---- READ SENSORS ----
-    imu_roll    = read_roll()        # radians or deg
-    imu_pitch   = read_pitch()
-    imu_yaw     = read_yaw()
+    imu_roll    = get_roll_deg()        # radians or deg
+    imu_pitch   = get_pitch_deg()
+    imu_yaw     = get_yaw_deg()
     altitude    = read_altimeter()   # meters
 
     # 2) ---- UPDATE PIDs ----
