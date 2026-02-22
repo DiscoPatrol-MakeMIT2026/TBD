@@ -1,6 +1,8 @@
 import time
 from .sensors.imu import get_pitch_deg, get_roll_deg , get_yaw_deg
 from .sensors.altitudeT import get_altitude, init_altitude, close_altitude
+from .control.rc import send_motors, read_motors
+
 
 # --- PID State Variables ---
 roll_i = pitch_i = yaw_i = thrust_i = 0.0
@@ -86,7 +88,7 @@ while True:
     motors = mix(roll_cmd, pitch_cmd, yaw_cmd, thrust_cmd)
 
     # 4) ---- SEND MOTOR COMMANDS ----
-    send_to_motors(motors)
+    send_motors(motors)
 
     # 5) Fixed loop rate: aim ~200–500Hz
     time.sleep(0.002)
