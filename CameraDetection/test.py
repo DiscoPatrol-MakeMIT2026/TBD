@@ -1,5 +1,6 @@
 import cv2
 from ultralytics import YOLO
+from led import alarm_alert, disco_cycle
 
 # Load YOLOv8 nano 
 model = YOLO("yolov8n.pt")  
@@ -16,7 +17,11 @@ while True:
 
     # Check if any person detected
     if len(results[0].boxes) > 0:
-        print("Intruder Detected!")
+        print("🚨 Person detected!")
+        alarm_alert()
+    else:
+        disco_cycle()
+            
 
     # Draw boxes on frame
     annotated = results[0].plot()
