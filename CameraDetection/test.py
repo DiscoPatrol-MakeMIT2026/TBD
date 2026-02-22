@@ -1,34 +1,39 @@
 import cv2
+import time
 from ultralytics import YOLO
 from led import alarm_alert, disco_cycle
 
-# Load YOLOv8 nano 
-model = YOLO("yolov8n.pt")  
+# Load YOLOv8 nano model
+model = YOLO("yolov8n.pt")
 
-cap = cv2.VideoCapture(0)  # 0 = Pi camera
+# Open camera (0 = default Pi camera)
+cap = cv2.VideoCapture(0)
+
+if not cap.isOpened():
+    print("❌ Camera failed to open")
+    exit()
+
+print("✅ Camera started. Running detection...")
 
 while True:
     ret, frame = cap.read()
     if not ret:
+        print("❌ Failed to read frame")
         break
 
-    # Run YOLO detection, class 0 = person only
-    results = model(frame, classes=[0])
+    # Run YOLO person detection (class 0 = person)
+    results = model(frame, classes=[0], verbose=False)
 
-    # Check if any person detected
+    # Check detection
     if len(results[0].boxes) > 0:
         print("🚨 Person detected!")
         alarm_alert()
     else:
+        print("No person")
         disco_cycle()
-            
 
-    # Draw boxes on frame
-    annotated = results[0].plot()
-    cv2.imshow("Drone Camera", annotated)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+    # Small delay to stabilize LED behavior and reduce CPU usage
+    time.sleep(0.1)
 
 cap.release()
-cv2.destroyAllWindows()
+print("🛑 Camera stopped.")
